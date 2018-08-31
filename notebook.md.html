@@ -52,9 +52,14 @@ contained the game loop and state logic of the game. So how do we instantiate th
 To solve this problem, we used the following (and in hindsight, extremely obvious) solution: instantiate the `Window` class with a window pointer, and either set the pointer to a window or leave it NULL.
 
 ### the singleton class pattern
+We wanted to change certain parameters of our project between runs (e.g. the network architecture, or the bullet and ship speed, that sort of thing). However, because we decided to write our project in c++,
+we had to recompile on every change. This quickly became unfeasible after compiling took more than 10 minutes (which is something we fixed later as well!). 
 
+From practical experience with video game tinkering, I had seen many .cfg files up until this point. We realized that if we had a config file for all these parameters, we could just feed all the parameters at runtime,
+and change them at our own leisure. However, we ran into implementation problems relatively quickly. We had many instances of several classes, mostly nested calls. We could instantiate a `Constants` object in every class,
+but that also seemed not the correct approachc. How do we make something globally accessible in nested functions and classes?
 
-
+We used the `extern Constants constants` approach. It is a janky solution compared to the singleton class pattern, but it worked for us.
 
 
 # Trying to learn web development
@@ -98,12 +103,22 @@ Which is pretty useful.
 
 
 
-# Trying to learn Vulkan
+#  Game development
 
+## Particle effects 
+I have always been enamored with particle effects in games, especially when well done. The bomb cloud from the wind waker is one of my favorite effects of all time.
+You can see the effect recreated [here](https://www.youtube.com/watch?v=0IrCggoJCno). In the coming weeks, I will be trying to recreate the effects myself according to this guide (which seems like a proper introduction to the subject).
+Furthermore, I want to create some sort of `Window` where I can play the particle effect.  
+
+## Lua Scripting
+Similar to the configuration problems we faced in the bachelor thesis, I was always interested in the drag'n'drop programming interfaces like in unity or the unreal engine. In these engines, the developer can write some script (e.g. for movement)
+and this script is then in some way converted to actual code? It seemed like magic to me. I vaguely knew of the term JIT compilation, but never really knew what that meant. I dabbled with lua scripting in the source engine for Dota 2 (specifically trying to recreate
+my favorite Heroes of Newerth Hero, Chipper). I recently saw a luaJIT implementation somewhere.
+## Understanding Computer graphics
 !!! WARNING
     This is me trying to understand computer graphics. Here be dragons.
 
-## Valve's involvement
+### Valve's involvement
 Valve released a vulkan SDK called the **lunarSDK**. It contains all the vulkan libraries and some demos. This SDK contains the vulkan libraries and provides some handles for developers wanting to use it.
  have no idea where to start with this. I did some research and found  a repo which supposedly  simplifies vulkan development (making it more like OpenGL) called [V-EZ](https://github.com/GPUOpen-LibrariesAndSDKs/V-EZ).
  
