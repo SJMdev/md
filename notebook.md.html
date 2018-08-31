@@ -21,10 +21,9 @@ for (auto &asteroid: d_asteroids)
 The astute reader will note that something is going wrong here: what happens if you erase the asteroid that you are currently iterating over? **The program crashes***.
 so it did. we fixed this by marking asteroids and bullets for destruction, and destroying them later when not iterating over them (I think. I need to look this up).
 
-
 ### Testing multiple algorithms: "case" in point
 We wanted to use different learning algorithms. However, these learning algorithms required different network architectures. These algorithms were mostly similar in structure and data flow,
-thus we implemented `case` switches for these algorithms and provided the constructor of the `Network`instance with a parameter stating which algorithm we were currently using.
+thus we implemented `case` switches for these algorithms and provided the constructor of the `Network`instance with a parameter describing which algorithm we were currently using.
 
 Unfortunately, as it always does, the core logic of these algorithms diverges pretty fast. It ended up with us writing a whole lot of state management and case logic in each function of the `Network` class,
 which in turn lead to less clarity (and a lot of mistakes).
@@ -110,10 +109,20 @@ I have always been enamored with particle effects in games, especially when well
 You can see the effect recreated [here](https://www.youtube.com/watch?v=0IrCggoJCno). In the coming weeks, I will be trying to recreate the effects myself according to this guide (which seems like a proper introduction to the subject).
 Furthermore, I want to create some sort of `Window` where I can play the particle effect.  
 
+Steps already taken:
+1. Installing blender
+
+Steps to take:
+
+2. ???
+3. the rest of the fucking owl.
+
 ## Lua Scripting
 Similar to the configuration problems we faced in the bachelor thesis, I was always interested in the drag'n'drop programming interfaces like in unity or the unreal engine. In these engines, the developer can write some script (e.g. for movement)
 and this script is then in some way converted to actual code? It seemed like magic to me. I vaguely knew of the term JIT compilation, but never really knew what that meant. I dabbled with lua scripting in the source engine for Dota 2 (specifically trying to recreate
-my favorite Heroes of Newerth Hero, Chipper). I recently saw a luaJIT implementation somewhere.
+my favorite Heroes of Newerth Hero, Chipper). I recently saw a blog about creating and using lua bindings in c++ (click [here](https://eliasdaler.wordpress.com/2013/10/11/lua_cpp_binder/). Additionally, [this](https://eliasdaler.wordpress.com/2015/08/10/using-lua-and-cpp-in-practice/) blog contains some real world
+examples of using lua in c++.
+
 ## Understanding Computer graphics
 !!! WARNING
     This is me trying to understand computer graphics. Here be dragons.
