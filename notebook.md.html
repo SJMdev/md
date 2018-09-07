@@ -136,6 +136,32 @@ and this script is then in some way converted to actual code? It seemed like mag
 my favorite Heroes of Newerth Hero, Chipper). I recently saw a blog about creating and using lua bindings in c++ (click [here](https://eliasdaler.wordpress.com/2013/10/11/lua_cpp_binder/). Additionally, [this](https://eliasdaler.wordpress.com/2015/08/10/using-lua-and-cpp-in-practice/) blog contains some real world
 examples of using lua in c++.
 
+### installing the lua libraries on windows.
+There is a simple executable installer which you can grab off any search engine. This installs all the libraries and include folders etc.
+
+setting up a visual studio project that can use lua takes a bit. In essence, you need to include this at the top of your file:
+
+~~~~~~~~~~~~~~~~~~ C
+extern "C" {
+    # include "lua.h"
+    # include "lauxlib.h"
+    # include "lualib.h"
+    }
+~~~~~~~~~~~~~~~~
+Because  all the lua libraries are written in C.
+
+Furthermore, in the project's settings, you need to 
+1. Include the lua libraries themselves (by adding them to the "include" directories)
+2. Include the lua DLLs (by adding them to the "linker libraries")
+3. Adding "lua.5.1.lib" to the included libraries 
+
+Now, it sort of works. Additionally, I now sort of understand how useful template metaprogramming is: It allows you to dynamically create datatypes that we read in from the lua file.
+
+next step is creating dynamic functions.
+
+
+
+
 ## Understanding Computer graphics
 !!! WARNING
     This is me trying to understand computer graphics. Here be dragons.
