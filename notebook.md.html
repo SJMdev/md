@@ -104,11 +104,28 @@ Which is pretty useful.
 
 #  Game development
 
+## Developing an ECS 
+First, I'm doing it my way. Afterwards, Let's try to do some template instantiation stuff.
+
+### The World
+the World manages all entities, and creation and destruction. some small thinking points:
+
+!!! note
+    Why not just use a vector of entities?
+I think(?) because it is cheaper to keep track of entities via pointer (and some other template stuff). Therefore, in the  `World` object, we have a `createEntity` function,
+which returns a pointer to an entity. 
+
+!!! note
+    Why is this a plain pointer?
+I genuinely do not know yet. Will weak or shared_ptr help?
+
+### Entities 
+the gist of the ECS is that an Entity is dumb. It has an ID by which it is referred. it also has components. I am currently envisioning it as a vector of type `Component`,
+but I'm not sure yet!
+
+
 ## Using Unity as a stepping stone
-Unity's game engine is pretty useful and cookie cutter: it empowers users to quickly develop prototypes (and actual games). I want to create a simple prototype of a game that I have been toying with.
-
-Remember the slide levels in Mario 64 for the nintendo 64? I want to create a multiplayer game based on that. Just a very simple prototype.
-
+Unity's game engine is pretty useful and cookie cutter: it empowers users to quickly develop prototypes (and actual games).
 
 ## Particle effects 
 I have always been enamored with particle effects in games, especially when well done. The bomb cloud from the wind waker is one of my favorite effects of all time.
