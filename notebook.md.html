@@ -178,24 +178,21 @@ next step is creating dynamic functions.
 
 
 
+## Object Oriented Programming vs. Data Oriented Programming
+There is a very interesting dichotomy in modern computing science (or even a schism from the OOP church). Object Oriented Programming is taught as the de facto standard for modern programming in general (as well as modern programming languages). However, It seems that often, the rigorous attachment to the OOP paradigm can lead to unfortunate situations, where practically solving a problem (i.e. "engineering" a solution) becomes secondhand towards the implementation style.  Elements of Object Oriented Programming can be very useful, such as inheritance, especially in cases such as GUI programming. An example of this is where some system will provide a base class `Button`, from which the user can derive other buttons, with different implementations based on the `virtual` (c++ term) methods in the base class, such as `onClick()`. While it can still be used as a button (as the new class is "implemented in terms of a" button), the effects that happen when clicking on the button can be implemented in a simple way. Furthermore, the idea of message passing between `Objects` (not objects in the programming term, but instances of different classes) allows the user to create a management dynamic (or a flow chart). However, OOP also comes at a cost: users will need to structure their program before starting to implement classes. Users will need to decide what scopes certain objects live in, so that they can communicate with other objects, and which objects carry responsibility for different parts of the implementation. However, I have always felt that eventually, this becomes a major roadblock in fast iteration: because objects live in a certain scope, and only provide certain functionality, their effectiveness is limited. While we can extend their usefulness by adding new methods or new fields (or placing them in a different scope), the structure of the program changes as well. Furthermore, maybe some responsibilities change over time of some objects. This to me leads me to believe that adhering to such a rigorous structure can hinder quick progression. Furthermore, because functionality like functions are now hidden within objects, we will need to instantiate an object in order to use those functions (or deal with static member functions of the class, or worse, trying to implement a singleton). In practical terms, this would mean dealing with an allocation on the stack (nitpicking, I know), or throwing stateful objects around between different functions. 
+
+Another problem that I personally ran into is hierarchy problems, where certain objects are members of other objects. If your application does not have proper structure, a recurring problem will be that a data member will need access to another member of the class it is a member of. This means we do not only need to provide downstream information, but also upstream information requests. This very quickly leads to hacky implementations and weird state structures implemented outside of the class. This is of course also due to inexperience, but it can still be a problem for users, even if they know how to solve the problem at hand (so this is an __implementational__ detail).
+
+Lastly, and this is a problem that I am unsure whether or not is fixable, is member accessors (or non-member accessors even). The Idea that a `class` object can contain immutable fields (i.e. `private`) is a clever idea: it means that the object can either carry hidden state that the users needs / wants to be shielded from. Furthermore, it allows a class to define member functions that only itself can use to operate on its own data, exposing an API that the user can use in order to interface with the object, but allowing for better control flow / logical structuring of the actual behavior that the API provides. However, it also seems that this idea of limiting access to an object originates from the idea that users do not know what do to with your object, and need to explicitly (or implicitly!) be told what and what NOT to do with the class. However, to me, it feels unnecessary to access fields such as `size` via a member function called `size()`. While the member function probably has guarantees that it will not change the member field itself (i.e. `size_t getSize() const;`) changing the size of, for example, a `string` in this way will lead to undefined behavior. The argument thus becomes: make it as hard as possible to shoot yourself in the foot. I think this has merit when you have to work in a large team, where not everyone is up-to-date or concerned with your specific part of the application, and thus the rules about any particular class are implicit within the usage of the class. However, it provides a lot of overhead (in my opinion) dealing with eventual stupidity of users. More concisely: you are not worrying about solving any particular problem with your code, but are more concerned with everything BUT solving the problem that the program should solve. 
+
+Of course, there are more arguments to be made against object oriented programming, but most of them are implementational details (at least in the c++ camp of things). While for me, the problems that arise from the implementation are never problems I experience, I can understand the resistance against it.
+
+I do want to admit that Object Oriented Programming in c++ is immensely useful in some circumstances, because of `RAII` (resource acquisition is initialization). Because an object will be destroyed when it leaves the scope, we can directly manage what happens when the objects destructor is called (`~Object()), which makes writing code that deals with memory and files a lot more managable than it ever was in C. At least, for me.
 
 ## Understanding Computer graphics
 !!! WARNING
-    This is me trying to understand computer graphics. Here be dragons.
 
-### Valve's involvement
-Valve released a vulkan SDK called the **lunarSDK**. It contains all the vulkan libraries and some demos. This SDK contains the vulkan libraries and provides some handles for developers wanting to use it.
- have no idea where to start with this. I did some research and found  a repo which supposedly  simplifies vulkan development (making it more like OpenGL) called [V-EZ](https://github.com/GPUOpen-LibrariesAndSDKs/V-EZ).
- 
-Steps already taken:
-1. Download & install lunarSDK ([here](https://www.lunarg.com/vulkan-sdk/))
 
-2. Download V-EZ ([here](https://github.com/GPUOpen-LibrariesAndSDKs/V-EZ))
-    - installing requires CMake, so install CMake
-    - vulkan libraries not found. :(
-!!! How to fix?
-    currently trying to figure this out.
-    
 
 
 
