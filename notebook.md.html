@@ -105,27 +105,17 @@ Which is pretty useful.
 #  Game development
 
 ## Developing an ECS 
-First, I'm doing it my way. Afterwards, Let's try to do some template instantiation stuff.
 
 ### The World
-the World manages all entities, and creation and destruction. some small thinking points:
 
 !!! note
     Why not just use a vector of entities?
-I think(?) because it is cheaper to keep track of entities via pointer (and some other template stuff). Therefore, in the  `World` object, we have a `createEntity` function,
-which returns a pointer to an entity. 
+We want data locality in order to prevent cache misses. However, what I am currently unsure about is whether we want similar entities (i.e. entities with shared components) close to each other, or an array of components, where each entity only has a pointer to the component.
 
-!!! note
-    Why is this a plain pointer?
-I genuinely do not know yet. Will weak or shared_ptr help?
 
 ### Entities 
-the gist of the ECS is that an Entity is dumb. It has an ID by which it is referred. it also has components. I am currently envisioning it as a vector of type `Component`,
-but I'm not sure yet!
+the gist of the ECS is that an Entity is dumb. It has an ID by which it is referred. it also has components. I am currently envisioning it as a vector of type `Component` (more like a set of components). users can specify a `System` for some types of components. i.e. if there is a component `Health`, it allows us to create a `System` (a function) that updates the health, or knows what do to if the component is there for an entity.
 
-
-## Using Unity as a stepping stone
-Unity's game engine is pretty useful and cookie cutter: it empowers users to quickly develop prototypes (and actual games).
 
 ## Particle effects 
 I have always been enamored with particle effects in games, especially when well done. The bomb cloud from the wind waker is one of my favorite effects of all time.
@@ -177,6 +167,7 @@ Now, it sort of works. Additionally, I now sort of understand how useful templat
 next step is creating dynamic functions.
 
 
+# Ideas about programming
 
 ## Object Oriented Programming vs. Data Oriented Programming
 There is a very interesting dichotomy in modern computing science (or even a schism from the OOP church). Object Oriented Programming is taught as the de facto standard for modern programming in general (as well as modern programming languages). However, It seems that often, the rigorous attachment to the OOP paradigm can lead to unfortunate situations, where practically solving a problem (i.e. "engineering" a solution) becomes secondhand towards the implementation style.  Elements of Object Oriented Programming can be very useful, such as inheritance, especially in cases such as GUI programming. An example of this is where some system will provide a base class `Button`, from which the user can derive other buttons, with different implementations based on the `virtual` (c++ term) methods in the base class, such as `onClick()`. While it can still be used as a button (as the new class is "implemented in terms of a" button), the effects that happen when clicking on the button can be implemented in a simple way. Furthermore, the idea of message passing between `Objects` (not objects in the programming term, but instances of different classes) allows the user to create a management dynamic (or a flow chart). However, OOP also comes at a cost: users will need to structure their program before starting to implement classes. Users will need to decide what scopes certain objects live in, so that they can communicate with other objects, and which objects carry responsibility for different parts of the implementation. However, I have always felt that eventually, this becomes a major roadblock in fast iteration: because objects live in a certain scope, and only provide certain functionality, their effectiveness is limited. While we can extend their usefulness by adding new methods or new fields (or placing them in a different scope), the structure of the program changes as well. Furthermore, maybe some responsibilities change over time of some objects. This to me leads me to believe that adhering to such a rigorous structure can hinder quick progression. Furthermore, because functionality like functions are now hidden within objects, we will need to instantiate an object in order to use those functions (or deal with static member functions of the class, or worse, trying to implement a singleton). In practical terms, this would mean dealing with an allocation on the stack (nitpicking, I know), or throwing stateful objects around between different functions. 
@@ -187,10 +178,24 @@ Lastly, and this is a problem that I am unsure whether or not is fixable, is mem
 
 Of course, there are more arguments to be made against object oriented programming, but most of them are implementational details (at least in the c++ camp of things). While for me, the problems that arise from the implementation are never problems I experience, I can understand the resistance against it.
 
-I do want to admit that Object Oriented Programming in c++ is immensely useful in some circumstances, because of `RAII` (resource acquisition is initialization). Because an object will be destroyed when it leaves the scope, we can directly manage what happens when the objects destructor is called (`~Object()), which makes writing code that deals with memory and files a lot more managable than it ever was in C. At least, for me.
+I do want to admit that Object Oriented Programming in c++ is immensely useful in some circumstances, because of `RAII` (resource acquisition is initialization). Because an object will be destroyed when it leaves the scope, we can directly manage what happens when the objects destructor is called (`~Object()`), which makes writing code that deals with memory and files a lot more managable than it ever was in C. At least, for me.
 
-## Understanding Computer graphics
-!!! WARNING
+
+## Data oriented programming
+The gist of the idea is that the data is and must be a first-class citizen. Dealing with data properly will result in correct, clean and fast code. Memory management is thus one of the first concerns. In most cases, people do not even want to touch or think about memory management: it is something that the user would like the computer to deal with. The problem is that I understand this mentality very clearly: it feels like bikeshedding trying to manage your own memory, when the underlying architecture can manage memory perfectly fine. I personally am a advocate for "make it work, then make it fast", but memory layout is such a fundamental / architectural problem, that you need to think about it beforehand. I also want to mention that most of the time, for most problems, memory management is not an issue that the user even needs to think about, if the problem is simplistic enough. However, in some cases, where high performance is warranted / needed/ required, it is a very beneficial way of structuring your program. I do believe that performance is correctness, but only to a certain degree. People use c++ instead of c because some of the memory management is simplified and/or abstracted in such a way that for a minimal cost, the user gets so much more peace of mind in return. However, the patterns that yield from "performance is correctness" can still be applied in modern c++: preallocating a vector and then inserting is about 80-100% faster then just using `push_back()`. Changing the allocator to grow even greedier than exponential ( instead of size * 2, size * 3.3) also has meaningful impact on insertion speed. I personally very much enjoy the addition of the STL and its useful container types: it allows me to not worry about memory, allocation on the heap and pointers, all of which simplify my programs. However, I do understand that this all comes at a cost (not even for performance, but also for compile time!). I can't however yet bring myself to start implementing all these more efficient synonyms for these STL classes just to get 10% more performance overall. The complexity of programming grows at a large rate in that way. Maybe later.
+
+## The case for procedural programming
+the idea of Procedural programming being usurped by OOP as the definitive better option is not correct, in my opinion. Furthermore, I have recently adopted the idea that any program should start as a procedural program, and only later possibly be refactored into classes. functions that transform elements, take arguments, and so on, can operate perfectly fine outside of a class. The problem for me lies in `data` classes, if I can call them that. Suppose a 3-dimension float vector class `Vec3f`. If we would have a dot product function, would probably invoke it much akin to `lhs.dot(rhs)`. However, if `dot` would not be a member function, we would implement it as `dot(Vec3f &lhs, Vec3f const &rhs)` (where, based on implementation, we could return `void`, a reference to `&lhs` for further chaining, or a new `Vec3f result`). Now, it becomes a case of infix notation like `a + b` , or polish notation, `+ a b`. Furthermore, one could argue that this `dot` function really belongs to the class `Vec3f` because it can only deal with arguments that are `Vec3f`, and only make sense in the context of `Vec3f`. I am unsure what pattern I agree with more. However, because it is a class that contains functions, and object `vec3f` also contains a v-table pointer to its functions. In a data-oriented world, this is unwanted baggage (or more strongly termed, `wasted memory`). I am at the moment unsure whether each instantiated object contains this pointer, or only those that member functions are called on. However, it becomes obvious that if we have many instances of `Vec3f` (which in theory are only three floats stacked together), we have a lot of wasted space. I think a solution would be to have the `dot()` function live in the namespace of `Vec3f`. I read somewhere (in a discussion of `class vs. struct`) that said __a class if it has hidden state, otherwise a struct__, which I believe to be the most sensible standpoint I have read so far. When I finished the c++ course, I had forgotten about structs. Now, I try to use them more. The quote from the discussion is similar to the idea that a struct should only contain POD (Plain Ol' Data). However, this lead me to believe that any object that requires functionality or change should be a class, which is definitely not true either.
+
+
+
+
+
+
+
+
+
+
 
 
 
