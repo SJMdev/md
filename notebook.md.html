@@ -167,11 +167,10 @@ Now, it sort of works. Additionally, I now sort of understand how useful templat
 next step is creating dynamic functions.
 
 
-<<<<<<< HEAD
+
 =======
 # Ideas about programming
 
->>>>>>> e25f8acfcf5dd973333e406a1b197d30c8b0e894
 ## Object Oriented Programming vs. Data Oriented Programming
 There is a very interesting dichotomy in modern computing science (or even a schism from the OOP church). Object Oriented Programming is taught as the de facto standard for modern programming in general (as well as modern programming languages). However, It seems that often, the rigorous attachment to the OOP paradigm can lead to unfortunate situations, where practically solving a problem (i.e. "engineering" a solution) becomes secondhand towards the implementation style.  Elements of Object Oriented Programming can be very useful, such as inheritance, especially in cases such as GUI programming. An example of this is where some system will provide a base class `Button`, from which the user can derive other buttons, with different implementations based on the `virtual` (c++ term) methods in the base class, such as `onClick()`. While it can still be used as a button (as the new class is "implemented in terms of a" button), the effects that happen when clicking on the button can be implemented in a simple way. Furthermore, the idea of message passing between `Objects` (not objects in the programming term, but instances of different classes) allows the user to create a management dynamic (or a flow chart). However, OOP also comes at a cost: users will need to structure their program before starting to implement classes. Users will need to decide what scopes certain objects live in, so that they can communicate with other objects, and which objects carry responsibility for different parts of the implementation. However, I have always felt that eventually, this becomes a major roadblock in fast iteration: because objects live in a certain scope, and only provide certain functionality, their effectiveness is limited. While we can extend their usefulness by adding new methods or new fields (or placing them in a different scope), the structure of the program changes as well. Furthermore, maybe some responsibilities change over time of some objects. This to me leads me to believe that adhering to such a rigorous structure can hinder quick progression. Furthermore, because functionality like functions are now hidden within objects, we will need to instantiate an object in order to use those functions (or deal with static member functions of the class, or worse, trying to implement a singleton). In practical terms, this would mean dealing with an allocation on the stack (nitpicking, I know), or throwing stateful objects around between different functions. 
 
@@ -195,12 +194,28 @@ the idea of Procedural programming being usurped by OOP as the definitive better
  I think a solution would be to have the `dot()` function live in the namespace of `Vec3f`. I read somewhere (in a discussion of `class vs. struct`) that said __a class if it has hidden state, otherwise a struct__, which I believe to be the most sensible standpoint I have read so far. When I finished the c++ course, I had forgotten about structs. Now, I try to use them more. The quote from the discussion is similar to the idea that a struct should only contain POD (Plain Ol' Data). However, this lead me to believe that any object that requires functionality or change should be a class, which is definitely not true either.
 
 
-## solving some problems.
-POD objects should be structs, and do not provide constructors. They are always in a valid state through default initializers. Any object that allocates memory for itself (or even for something else) should be a class, as you do not want to use them in an invalid state. There is no way to guarantee that a user will always call some sort of `init()` function on struct. That means that the author needs to be wary of any functions that he or she provides, as the onus is now on every function to verify whether the object is valid or not.
+# solving some problems.
+
+## places
+places of storages, places of generation, places of transformation, places of logic (logic or result?). Elaborate on this.
+
+
+## POD vs classes
+POD objects should be structs, and do not provide constructors. They are always in a valid state through default initializers. Any object that allocates memory for itself (or even for something else) should be a class, as you do not want to use them in an invalid state. There is no way to guarantee that a user will always call some sort of `init()` function on struct. That means that the author needs to be wary of any functions that he or she provides, as the onus is now on every function to verify whether the object is valid or not. Furthermore, POD objects both have a standard layout. Trivial objects are contained in a contiguous memory area, but the order of the fields is not determined.
 
 furthermore, the fact that a class object can clean up after itself through a destructor is also incredibly useful in preventing memory leaks.
 
 Conceptually, it IS useful to have constructors: it prevents the need for some sort of init function. However, the problem arises when multiple options of constructing an object is provided. Jon Blow solves this exact problem by only allowing one constructor to be provided. This also solves the problem of what operator new is doing (i think? not sure!).
+
+## operator overloading, copy elision
+`c` does not allow for operator overloading. It is a very useful feature, especially in numerical maths. However, it is difficult to convey what each operator actually does for non-value types.
+
+
+## column major vs row major
+openGL expects any matrix class to be implemented as column major. However, users reason about matrices in row major fashion. This leads to an infinite amount of confusion, even when writing library code.
+
+
+
 
 ## Understanding Computer graphics
 
