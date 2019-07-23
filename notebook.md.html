@@ -167,6 +167,8 @@ Now, it sort of works. Additionally, I now sort of understand how useful templat
 next step is creating dynamic functions.
 
 
+
+=======
 # Ideas about programming
 
 ## Object Oriented Programming vs. Data Oriented Programming
@@ -198,7 +200,6 @@ auto x = int{3};
 auto car = Car{a,b,c,};
 for (auto &car: cars){}
 auto x = make_unique<Car>; // useful for heap allocation?
-
 ~~~~~~~~~~
 
 # Using std::string or SString?
@@ -206,6 +207,33 @@ Using custom data types in a library is something that I am unsure how to handle
 
 ## using `ALuint`, `uint32_t`, or `buffer`?
 the buffer and source UUIDs in both openAL and openGL are of `uint32_t` type. So either the calling signature for buffers or sound sources becomes either `GLuint`, `ALuint` or I can change it to `uint32_t`. Even simpler still, we can use a typedef to have both a `buffer` or a `source` type to both be `typedef buffer uint32_t`. The problem with these types of typedefs is while they carry significance in the typename, it is not immediately obvious what exactly the type is! This is the reason I do not like typedeffing basic types. But maybe that is just me.
+=======
+# solving some problems.
+
+## places
+places of storages, places of generation, places of transformation, places of logic (logic or result?). Elaborate on this.
+
+
+## POD vs classes
+POD objects should be structs, and do not provide constructors. They are always in a valid state through default initializers. Any object that allocates memory for itself (or even for something else) should be a class, as you do not want to use them in an invalid state. There is no way to guarantee that a user will always call some sort of `init()` function on struct. That means that the author needs to be wary of any functions that he or she provides, as the onus is now on every function to verify whether the object is valid or not. Furthermore, POD objects both have a standard layout. Trivial objects are contained in a contiguous memory area, but the order of the fields is not determined.
+
+furthermore, the fact that a class object can clean up after itself through a destructor is also incredibly useful in preventing memory leaks.
+
+Conceptually, it IS useful to have constructors: it prevents the need for some sort of init function. However, the problem arises when multiple options of constructing an object is provided. Jon Blow solves this exact problem by only allowing one constructor to be provided. This also solves the problem of what operator new is doing (i think? not sure!).
+
+## operator overloading, copy elision
+`c` does not allow for operator overloading. It is a very useful feature, especially in numerical maths. However, it is difficult to convey what each operator actually does for non-value types.
+
+
+## column major vs row major
+openGL expects any matrix class to be implemented as column major. However, users reason about matrices in row major fashion. This leads to an infinite amount of confusion, even when writing library code.
+
+
+
+
+## Understanding Computer graphics
+
+
 
 
 
