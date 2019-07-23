@@ -191,16 +191,21 @@ the idea of Procedural programming being usurped by OOP as the definitive better
 
  I think a solution would be to have the `dot()` function live in the namespace of `Vec3f`. I read somewhere (in a discussion of `class vs. struct`) that said __a class if it has hidden state, otherwise a struct__, which I believe to be the most sensible standpoint I have read so far. When I finished the c++ course, I had forgotten about structs. Now, I try to use them more. The quote from the discussion is similar to the idea that a struct should only contain POD (Plain Ol' Data). However, this lead me to believe that any object that requires functionality or change should be a class, which is definitely not true either.
 
+# Triple A c++ (Almost Always Auto)
+`auto` is very useful for iterators, as it allows us to just use list iteration syntax, preventing the user from over / underflowing. However, some people strive towards the Almost Always Auto convention, as necessarily, every variable needs to be initialized. Sometimes the user does not care for the type (which is also the case for iterators).
+~~~~~~~~~~
+auto x = int{3};
+auto car = Car{a,b,c,};
+for (auto &car: cars){}
+auto x = make_unique<Car>; // useful for heap allocation?
 
+~~~~~~~~~~
 
+# Using std::string or SString?
+Using custom data types in a library is something that I am unsure how to handle. In general, I feel that any outward facing functions should primarily standard types. The problem with this arises due to the fact that I wanted to write my own `string` class for the `mallib` project. I can use my own implementation of `SString` (Simple String) everywhere, but that requires the caller to adhere to my re-implementation of `string`, which seems prohibitive at best. However, if we change the parameter call to `string`, and use `SString` internally, then we would need to convert between the two classes, which I don't like either. I think I will stick to std::string for now, and maybe call signatures for `const char *s` for string literals? or move constructor? I don't know.
 
-
-
-
-
-
-
-
+## using `ALuint`, `uint32_t`, or `buffer`?
+the buffer and source UUIDs in both openAL and openGL are of `uint32_t` type. So either the calling signature for buffers or sound sources becomes either `GLuint`, `ALuint` or I can change it to `uint32_t`. Even simpler still, we can use a typedef to have both a `buffer` or a `source` type to both be `typedef buffer uint32_t`. The problem with these types of typedefs is while they carry significance in the typename, it is not immediately obvious what exactly the type is! This is the reason I do not like typedeffing basic types. But maybe that is just me.
 
 
 
